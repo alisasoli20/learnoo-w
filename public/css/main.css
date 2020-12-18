@@ -1,0 +1,42 @@
+body{
+	background-color: #FFFFFF;
+}
+
+#nav {
+	border:2px solid grey;
+	border-radius: 5px;
+
+}
+#nav p{
+	font-family: sans-serif;
+	font-weight: 600;
+	color:#2765CF;
+	letter-spacing: 1px;
+	font-size:15px;
+}
+#image_box{
+	height: 700px;
+	border:2px solid grey;
+    border-radius: 5px;
+}
+#form{
+	font-family: sans-serif;
+	font-weight: 600;
+	color:black;
+	letter-spacing: 1px;
+	font-size:15px;
+	border-radius: 5px;
+}
+#signupform{
+	display:none;
+}
+#text-heading{
+	height:0.2rem;
+	width:18rem;
+	background-color:#0D3880;
+}
+#Module_underline{
+	height:0.1rem;
+	width:10rem;
+	background-color:#0D3880;
+}
