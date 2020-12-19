@@ -37,10 +37,24 @@ class UserController extends Controller
         $user = User::where('email',$request->email)->first();
         if($user){
             if(\Hash::check($request->password, $user->password)){
-                dd(Auth::attempt(['email' => $user->email, 'password' => $user->password]));
-                return redirect()->back()->with('success','Logged in successfully');
+                if($user->role == "student") {
+                    $request->session()->put('user', $user);
+                    Auth::login($user);
+                    return redirect(route('dashboard'));
+                }else{
+                    return redirect(route('welcome'));
+                }
             }
         }
         return redirect()->back()->with('error',"Credentials does not matched");
+    }
+    public function logout(Request $request){
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/');
+    }
+    public function profile(){
+        return view("student.profile");
     }
 }

@@ -38,9 +38,22 @@
         <div class="col-md-3" id="nav">
             <a href="{{ route("dashboard") }}"> <p class="text-center mt-2"> Dashboard </p> </a>
         </div>
-        <div class="col-md-3 " id="nav">
-            <a href="{{ route("institute") }}"> <p class="text-center mt-2" > Login/Register Your Institute </p> </a>
-        </div>
+        @if(Auth::check())
+            @if(Auth::user()->role == "teacher")
+                <div class="col-md-3 " id="nav">
+                    <a href="{{ route("institute.profile") }}"> <p class="text-center mt-2" > View Your Institute </p> </a>
+                </div>
+                @elseif(Auth::user()->role == "student")
+                <div class="col-md-3 " id="nav">
+                    <a href="{{ route("student.profile") }}"> <p class="text-center mt-2" > View Candidate's Institute </p> </a>
+                </div>
+            @endif
+        @else
+            <div class="col-md-3 " id="nav">
+                <a href="{{ route("institute") }}"> <p class="text-center mt-2" > Login/Register Your Institute </p> </a>
+            </div>
+        @endif
+
         <div class="col-md-3 " id="nav">
             <a href="{{ route('page','partners') }}"> <p class="text-center mt-2"> Our Partners</p> </a>
         </div>

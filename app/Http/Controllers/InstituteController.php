@@ -8,6 +8,7 @@ use App\Models\Subject;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class InstituteController extends Controller
 {
@@ -23,7 +24,9 @@ class InstituteController extends Controller
         $user = User::where('email',$request->email)->first();
         if($user){
             if(\Hash::check($request->password, $user->password)){
-                return redirect()->back()->with('success','Logged in successfully');
+                $request->session()->put('user',$user);
+                Auth::login($user);
+                return redirect('institute/profile');
             }
         }
         return redirect()->back()->with('error',"Credentials does not matched");
