@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig authType="PASSWORD" id="f06e6efc-1e1f-456e-816f-418a8f269408" customName="learnoo" nameFormat="CUSTOM">
+        <option name="customName" value="learnoo" />
+      </sshConfig>
+    </configs>
+  </component>
+</project>
