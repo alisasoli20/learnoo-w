@@ -7,16 +7,18 @@
             </div>
         @endif
         <div class="row">
+            <div class="col-md-12 text-right">
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button class="btn btn-danger">Logout</button>
+                </form>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-md-2 mt-5">
-                <img src="team-1.jpg" class="img-fluid ml-3" height="300px" width="200px" style="border-radius: 50%;">
+                <img src="{{ asset('images/'.Auth::user()->id_photo) }}" class="img-fluid ml-3" height="300px" width="200px" style="border-radius: 50%;">
             </div>
-            <div class="col-md-3 text-right">
-                 <form method="POST" action="{{ route('logout') }}">
-                     @csrf
-                     <button class="btn btn-danger">Logout</button>
-                 </form>
-            </div>
-            <div class="col-md-5 mt-5 ml-4">
+            <div class="col-md-8 mt-5 ml-4">
                 <div class="row mt-5">
                     <div class="col-md-4 mt-4">
                         <p style="font-size: 15px;"> Institute Name: <p>
@@ -26,7 +28,7 @@
                         <p id="contactus_underline">{{ Auth::user()->institute_name }}</p>
                     </div>
                     <div class="col-md-3">
-                        <a href="" type="submit" class="btn btn-sm" style="background-color:#3672D9;color:white"> Edit Details </a>
+                        <a href="{{ route('institute.profile.edit') }}" type="submit" class="btn btn-sm" style="background-color:#3672D9;color:white"> Edit Details </a>
                     </div>
                 </div>
                 <div class="row ">

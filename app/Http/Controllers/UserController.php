@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -41,12 +42,17 @@ class UserController extends Controller
                     $request->session()->put('user', $user);
                     Auth::login($user);
                     return redirect(route('dashboard'));
-                }else{
+                }
+                else{
                     return redirect(route('welcome'));
                 }
             }
         }
         return redirect()->back()->with('error',"Credentials does not matched");
+    }
+    public function editProfile(){
+        $user = User::find(Auth::user()->id);
+        return view("student.edit_profile",compact('user'));
     }
     public function logout(Request $request){
         Auth::logout();
@@ -56,5 +62,26 @@ class UserController extends Controller
     }
     public function profile(){
         return view("student.profile");
+    }
+    public function updateProfile(Request $request){
+        $user = User::where('id',Auth::user()->id)->first();
+        $rules = [
+            'name' => 'required|min:3|max:50',
+            'email' => 'required',
+        ];
+        $this->validate($request,$rules);
+        $data = $request->except('_token','password_confirmation','password','id_photo');
+        if($request->id_photo != null) {
+            @unlink(public_path('images/'.$user->id_photo));
+            $imageName = time() . '.' . $request->id_photo->extension();
+            $request->id_photo->move(public_path('images'), $imageName);
+            $data['id_photo'] = $imageName;
+        }
+        if($request->pasword != null) {
+            $data['password'] = \Hash::make($request->password);
+        }
+        $data['updated_at'] = Carbon::now();
+        User::where('id',Auth::user()->id)->update($data);
+        return redirect(route('student.profile'))->with('success','Student data has been updated');
     }
 }

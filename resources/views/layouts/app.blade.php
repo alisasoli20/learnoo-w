@@ -4,13 +4,14 @@
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
     <!-- 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+    @yield('page-css')
 </head>
 <body>
 <div class="container-fluid mt-2">
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-3 text-center">
             <div class="logo">
-                <h1 class="text-center"> Logo </h1>
+                <img src="{{ asset('img/logo.jpg') }}" width="60" height="80">
             </div>
         </div>
 
