@@ -12,7 +12,7 @@
             <div class="row">
                 <div class="col-md-12" data-wow-delay="0.1s">
                     <div class="member" data-aos="zoom-in" data-aos-delay="100">
-                        <img src="team-1.jpg" height="150px" width="100%" class="" alt="">
+                        <img src="{{ (isset($settings["partner_1"]->value))?asset('img/'.$settings["partner_1"]->value):asset("img/dummy.jpg") }}" height="150px" width="100%" class="" alt="">
                         <div class="member-info">
                             <div class="member-info-content">
                                 <h4>Walter White</h4>
@@ -30,7 +30,7 @@
 
                 <div class="col-md-12" data-wow-delay="0.1s">
                     <div class="member" data-aos="zoom-in" data-aos-delay="200">
-                        <img src="team-2.jpg" height="150px" width="100%" class="" alt="">
+                        <img src="{{ (isset($settings["partner_2"]->value))?asset('img/'.$settings["partner_2"]->value):asset("img/dummy.jpg") }}" height="150px" width="100%" class="" alt="">
                         <div class="member-info">
                             <div class="member-info-content">
                                 <h4>Sarah Jhonson</h4>
@@ -48,7 +48,7 @@
 
                 <div class="col-md-12" data-wow-delay="0.1s">
                     <div class="member" data-aos="zoom-in" data-aos-delay="200">
-                        <img src="team-3.jpg" height="150px" width="100%" class="" alt="">
+                        <img src="{{ (isset($settings["partner_3"]->value))?asset('img/'.$settings["partner_3"]->value):asset("img/dummy.jpg") }}" height="150px" width="100%" class="" alt="">
                         <div class="member-info">
                             <div class="member-info-content">
                                 <h4>Sarah Jhonson</h4>

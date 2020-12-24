@@ -4,7 +4,10 @@ namespace Database\Seeders;
 
 use App\Models\SecurityQuestion;
 use App\Models\Subject;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -50,7 +53,7 @@ class DatabaseSeeder extends Seeder
 //            ["name"=> "Combined Mathematics"]
 //        ]);
 
-         SecurityQuestion::insert([
+         /*SecurityQuestion::insert([
              ['question' => "What was the house number and street name you lived in as a child?"],
              ['question' => "What were the last four digits of your childhood telephone number?"],
              ['question' => "What primary school did you attend?"],
@@ -61,6 +64,15 @@ class DatabaseSeeder extends Seeder
              ['question' => "What is your grandmother's(on your mother's side) maiden name?"],
              ['question' => "What is your spouse or partner's mother's maiden name?"],
              ['question' => "In what town or city did your parents meet?"],
+         ]);*/
+         User::create([
+             'name' => 'Admin',
+             'email' => 'admin@admin.com',
+             'password' => Hash::make('password'),
+             'security_question' => 10,
+             'security_answer' => 'Shikarpur',
+             'role' => 'admin',
+             'created_at' => Carbon::now()
          ]);
     }
 }

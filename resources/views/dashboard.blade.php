@@ -1,5 +1,11 @@
 @extends('layouts.app')
 @section('content')
+    @if(session()->has('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+    @if(session()->has('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
     <div class="container-fluid">
         <div class="row mt-1">
             <div class="col-md-12">
@@ -79,11 +85,11 @@
                         <tr>
                             <td>{{ $module->id }}</td>
                             <td>{{ $module->name }}</td>
-                            <td>{{ $module->name }}</td>
+                            <td>{{ $module->institute_name }}</td>
                             <td>{{ $module->start_date }}</td>
                             <td>{{ $module->end_date }}</td>
                             <td><a target="_blank" href="{{ asset("pdfs/".$module->pdf) }}" class="btn btn-secondary">Full View</a></td>
-                            <td><a href="" class="btn btn-primary">Apply</a></td>
+                            <td><form method="POST" action="{{ route('student.module.apply',$module->id) }}">@csrf<button type="submit" class="btn btn-primary">Apply</button></form></td>
                         </tr>
                     @endforeach
 

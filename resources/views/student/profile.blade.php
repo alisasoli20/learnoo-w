@@ -8,6 +8,14 @@
     @endif
     <div class="container-fluid mt-2">
         <div class="row">
+            <div class="col-md-12 text-right">
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button class="btn btn-danger">Logout</button>
+                </form>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-md-2 mt-5">
                 <img src="{{ asset("images/".Auth::user()->id_photo) }}" class="img-fluid ml-3" height="300px" width="200px" style="border-radius: 50%;">
             </div>
@@ -59,16 +67,18 @@
                     </tr>
                     </thead>
                     <tbody>
+                    @foreach($applied_modules as $applied_module)
                     <tr>
-                        <td>1</td>
-                        <td>2</td>
-                        <td>3</td>
-                        <td>4</td>
-                        <td>5</td>
-                        <td>6</td>
-                        <td>7</td>
-                        <td>8</td>
+                        <td>{!! $applied_module->id !!}</td>
+                        <td>{!! $applied_module->module->name !!}</td>
+                        <td>{!! $applied_module->module->institute_name !!}</td>
+                        <td>{!! $applied_module->module->start_date !!}</td>
+                        <td>{!! $applied_module->module->end_date !!}</td>
+                        <td><a href="{!! asset('pdfs/'.$applied_module->module->pdf) !!}" target="_blank" class="btn btn-success">Open PDF</a></td>
+                        <td>{!! $applied_module->status !!}</td>
+                        <td><a href="#">Add Message</a></td>
                     </tr>
+                    @endforeach
                     </tbody>
                 </table>
             </div>

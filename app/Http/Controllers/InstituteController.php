@@ -2,18 +2,36 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\MeetingMail;
+use App\Models\AppliedModule;
 use App\Models\Institute;
+use App\Models\Meeting;
 use App\Models\Module;
+use App\Models\Setting;
 use App\Models\Subject;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use MacsiDigital\Zoom\Facades\Zoom;
 
 class InstituteController extends Controller
 {
     public function login_register(){
-        return view('institute.login_register');
+        if(Auth::check()){
+            if(Auth::user()->role == "student"){
+                return redirect(route('student.profile'));
+            }if(Auth::user()->role == "teacher"){
+                return redirect(route('institute.profile'));
+            }if(Auth::user()->role == "admin"){
+                return redirect(route('admin.profile'));
+            }
+        }
+        $settings = Setting::all();
+        $settings = $settings->keyBy('key');
+        return view('institute.login_register',compact('settings'));
     }
     public function login(Request $request){
         $rules =[
@@ -52,7 +70,14 @@ class InstituteController extends Controller
     }
     public function profile(){
         $subjects = Subject::all();
-        return view("institute.profile")->with(['subjects'=> $subjects]);
+        $settings = Setting::all();
+        $settings = $settings->keyBy('key');
+        $modules = Module::where('teacher_id',Auth::user()->id)->get();
+//        echo "<pre>";
+//        print_r($modules[0]->applied_module[0]->student);
+//        echo "</pre>";
+//        exit();
+        return view("institute.profile")->with(['subjects'=> $subjects, 'settings' => $settings, 'modules'=> $modules]);
     }
     public function insertModule(Request $request){
         $rules = [
@@ -65,6 +90,7 @@ class InstituteController extends Controller
         $this->validate($request,$rules);
         $data = $request->except('_token');
         $data['institute_name'] = Auth::user()->institute_name;
+        $data['teacher_id'] = Auth::user()->id;
         $pdfName = time().'.'.$request->pdf->extension();
         $request->pdf->move(public_path('pdfs'),$pdfName);
         $data['pdf'] = $pdfName;
@@ -73,7 +99,9 @@ class InstituteController extends Controller
     }
     public function editProfile(){
         $user = Auth::user();
-        return view("institute.edit_profile",compact('user'));
+        $settings = Setting::all();
+        $settings = $settings->keyBy('key');
+        return view("institute.edit_profile",compact('user','settings'));
     }
     public function updateProfile(Request $request){
         $user = User::where('id',Auth::user()->id)->first();
@@ -95,5 +123,28 @@ class InstituteController extends Controller
         $data['updated_at'] = Carbon::now();
         User::where('id',Auth::user()->id)->update($data);
         return redirect('institute.profile');
+    }
+    public function createMeeting(){
+        $module_id = $_GET['module_id'];
+        $student_id = $_GET['student_id'];
+        $module = Module::where('id',$module_id)->first();
+        $student = User::where('id',$student_id)->first();
+        $response = Zoom::user()->find("gnKXMLoxSTSGGIM6xQxtKQ")->meetings()->create([
+            "topic" => $module->name,
+            "type" => 1,
+            "start_time" => Carbon::now()->days(2),
+            "duration" => "1"
+        ]);
+        $meeting = Meeting::create([
+            'join_url' => $response->join_url,
+            'meeting_id' => $response->id,
+            'meeting_password'=> $response->password,
+            'teacher_id' => $module->teacher_id,
+            'created_at' => Carbon::now()
+        ]);
+        $user = Zoom::user()->find("gnKXMLoxSTSGGIM6xQxtKQ")->meetings;
+        Mail::to($student->email)->send(new MeetingMail($meeting));
+        echo json_encode($response->join_url);
+        return;
     }
 }

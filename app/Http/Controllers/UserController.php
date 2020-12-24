@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AppliedModule;
+use App\Models\Setting;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\File;
@@ -42,6 +44,14 @@ class UserController extends Controller
                     $request->session()->put('user', $user);
                     Auth::login($user);
                     return redirect(route('dashboard'));
+                }if($user->role == "teacher") {
+                    $request->session()->put('user', $user);
+                    Auth::login($user);
+                    return redirect(route('institute'));
+                }if($user->role == "admin") {
+                    $request->session()->put('user', $user);
+                    Auth::login($user);
+                    return redirect(route('admin.profile'));
                 }
                 else{
                     return redirect(route('welcome'));
@@ -52,7 +62,9 @@ class UserController extends Controller
     }
     public function editProfile(){
         $user = User::find(Auth::user()->id);
-        return view("student.edit_profile",compact('user'));
+        $settings = Setting::all();
+        $settings = $settings->keyBy('key');
+        return view("student.edit_profile",compact('user','settings'));
     }
     public function logout(Request $request){
         Auth::logout();
@@ -61,7 +73,14 @@ class UserController extends Controller
         return redirect('/');
     }
     public function profile(){
-        return view("student.profile");
+        $settings = Setting::all();
+        $settings = $settings->keyBy('key');
+        $applied_modules = AppliedModule::where('student_id', Auth::user()->id)->get();
+        /*echo "<pre>";
+        print_r($applied_modules[0]->module->name);
+        echo "</pre>";
+        exit();*/
+        return view("student.profile",compact('settings','applied_modules'));
     }
     public function updateProfile(Request $request){
         $user = User::where('id',Auth::user()->id)->first();
@@ -83,5 +102,13 @@ class UserController extends Controller
         $data['updated_at'] = Carbon::now();
         User::where('id',Auth::user()->id)->update($data);
         return redirect(route('student.profile'))->with('success','Student data has been updated');
+    }
+    public function moduleApply(Request $request,$id){
+        AppliedModule::insert([
+            'module_id' => $id,
+            'student_id' => Auth::user()->id,
+            'status' => 'pending',
+        ]);
+        return redirect()->back()->with('success','Successfully Applied for the module');
     }
 }

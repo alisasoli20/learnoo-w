@@ -1,6 +1,7 @@
 <html>
 <head>
     <title> Institute Webiste </title>
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
     <!-- 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
@@ -11,7 +12,7 @@
     <div class="row">
         <div class="col-md-3 text-center">
             <div class="logo">
-                <img src="{{ asset('img/logo.jpg') }}" width="60" height="80">
+                <img src="{{ asset('img/'.$settings["logo"]->value ) }}" width="60" height="80">
             </div>
         </div>
 
@@ -19,13 +20,13 @@
             <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img class="d-block w-100 h-100" src="{{ asset('img/slide-1.jpg') }}" alt="First slide">
+                        <img class="d-block w-100 h-100" src="{{ (isset($settings["advertisement_1"]->value))?asset('img/'.$settings["advertisement_1"]->value):asset("img/dummy.jpg") }}" alt="First slide">
                     </div>
                     <div class="carousel-item">
-                        <img class="d-block w-100 h-100" src="{{ asset('img/slide-2.jpg') }}" alt="Second slide">
+                        <img class="d-block w-100 h-100" src="{{ (isset($settings["advertisement_2"]->value))?asset('img/'.$settings["advertisement_2"]->value):asset("img/dummy.jpg") }}" alt="Second slide">
                     </div>
                     <div class="carousel-item">
-                        <img class="d-block w-100 h-100" src="{{ asset('img/slide-3.jpg') }}" alt="Third slide">
+                        <img class="d-block w-100 h-100" src="{{ (isset($settings["advertisement_3"]->value))?asset('img/'.$settings["advertisement_3"]->value):asset("img/dummy.jpg") }}" alt="Third slide">
                     </div>
                 </div>
                 <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
@@ -48,6 +49,11 @@
                 <div class="col-md-3 " id="nav">
                     <a href="{{ route("student.profile") }}"> <p class="text-center mt-2" > View Candidate's Institute </p> </a>
                 </div>
+                @elseif(Auth::user()->role == "admin")
+                <div class="col-md-3 " id="nav">
+                    <a href="{{ route("admin.profile") }}"> <p class="text-center mt-2" > Admin Profile </p> </a>
+                </div>
+
             @endif
         @else
             <div class="col-md-3 " id="nav">
@@ -68,13 +74,13 @@
             <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img class="d-block w-100 " src="{{ asset('img/slide-1.jpg') }}" height="70px" alt="First slide">
+                        <img class="d-block w-100 " src="{{ (isset($settings["advertisement_4"]->value))?asset('img/'.$settings["advertisement_4"]->value):asset("img/dummy.jpg") }}" height="70px" alt="First slide">
                     </div>
                     <div class="carousel-item">
-                        <img class="d-block w-100 " src="{{ asset('img/slide-2.jpg') }}" height="70px" alt="Second slide">
+                        <img class="d-block w-100 " src="{{ (isset($settings["advertisement_5"]->value))?asset('img/'.$settings["advertisement_5"]->value):asset("img/dummy.jpg") }}" height="70px" alt="Second slide">
                     </div>
                     <div class="carousel-item">
-                        <img class="d-block w-100 " src="{{ asset('img/slide-3.jpg') }}" height="70px" alt="Third slide">
+                        <img class="d-block w-100 " src="{{ (isset($settings["advertisement_6"]->value))?asset('img/'.$settings["advertisement_6"]->value):asset("img/dummy.jpg") }}" height="70px" alt="Third slide">
                     </div>
                 </div>
                 <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
@@ -107,7 +113,7 @@
 
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<script src="{{ asset('js/jquery-3.5.1.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.min.js') }}"> </script>
 @yield('page-scripts')
 </body>

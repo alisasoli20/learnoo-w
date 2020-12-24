@@ -145,33 +145,17 @@
             <h2 class="text-center "> Recent 100 Modules </h2>
             <h2 id="text-heading" class="offset-md-4"> </h2>
         </div>
-        <div class="col-md-2">
-            <button type="button" class="btn btn-primary m-md-2"> Admin Profile </button>
-        </div>
     </div>
     <div class="row mt-5">
         <div class="col-md-12">
             <div class="row">
+                @foreach($modules as $module)
                 <div class="col-md-3">
-                    <h6 class="text-center"> Module II </h6>
-                    <p class="text-center"> Institute E </p>
+                    <h6 class="text-center"> {{ $module->name }} </h6>
+                    <p class="text-center"> {{ $module->institute_name }} </p>
                     <h2 class="text-center offset-md-3" id="Module_underline"> </h2>
                 </div>
-                <div class="col-md-3">
-                    <h6 class="text-center"> Module II </h6>
-                    <p class="text-center"> Institute E </p>
-                    <h2 class="text-center offset-md-3" id="Module_underline"> </h2>
-                </div>
-                <div class="col-md-3">
-                    <h6 class="text-center"> Module II </h6>
-                    <p class="text-center"> Institute E </p>
-                    <h2 class="text-center offset-md-3" id="Module_underline"> </h2>
-                </div>
-                <div class="col-md-3">
-                    <h6 class="text-center"> Module II </h6>
-                    <p class="text-center"> Institute E </p>
-                    <h2 class="text-center offset-md-3" id="Module_underline"> </h2>
-                </div>
+                @endforeach
             </div>
         </div>
     </div>

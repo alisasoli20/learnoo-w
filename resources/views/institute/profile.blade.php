@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+    <div id="loading"></div>
     <div class="container-fluid mt-2">
         @if(session()->has('success'))
             <div class="alert alert-success">
@@ -113,7 +114,7 @@
     </div>
     <div class="container-fluid m-0 p-0">
         <div class="col-md-12 m-0 p-0">
-            <table class="table table-striped table-responsive table-bordered table-hover ">
+            <table class="table table-striped table-responsive table-bordered table-hover text-center">
                 <thead class="thead-dark">
                 <tr>
                     <th id="table_head">Ref No</th>
@@ -138,24 +139,94 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>3</td>
-                    <td>4</td>
-                    <td>+92-125478521</td>
-                    <td>hello123456@gmail.com</td>
-                    <td>12-05-2020</td>
-                    <td>12-05-2020</td>
-                    <td>9</td>
-                    <td>10</td>
-                    <td>11</td>
-                    <td>12</td>
-                    <td>13</td>
-                </tr>
+                @foreach($modules as $module)
+                    @foreach($module->applied_modules as $applied_module)
+                    <tr>
+                        <td>{!! $applied_module->id !!}</td>
+                        <td>{!! $module->name !!}</td>
+                        <td>{!! $applied_module->student->name !!}</td>
+                        <td>{!! $applied_module->student->country !!}</td>
+                        <td>{!! $applied_module->student->phone !!}</td>
+                        <td>{!! $applied_module->student->email !!}</td>
+                        <td>{!! $module->start_date !!}</td>
+                        <td>{!! $module->end_date !!}</td>
+                        <td><a href="{!! asset('pdfs/'.$module->pdf) !!}" target="_blank" class="btn btn-success">Open</a></td>
+                        <td><button id="create-meeting" class="btn btn-primary" onclick="startMeeting({{  $module->id }}, {{ $applied_module->student->id }})">Start</button></td>
+                        <td>{!! $applied_module->status !!}</td>
+                        <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Add Notes</button></td>
+                        <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Add Message</button></td>
+                    </tr>
+                    @endforeach
+                @endforeach
                 </tbody>
             </table>
 
         </div>
     </div>
+
+    {{-- Send Message Model--}}
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Message</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <form>
+                                    <div class="form-group">
+                                        <label>To</label>
+                                        <input type="text" class="form-control" readonly value="{{ Auth::user()->email }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Subject</label>
+                                        <input type="text" class="form-control" name="subject" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Message</label>
+                                        <textarea class="form-control" required></textarea>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Send message</button>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+@section('page-scripts')
+    <script>
+        $(document).ready(function (){
+            setVisible("#loading",false)
+        })
+        function startMeeting($m,$student_id) {
+            setVisible('#loading',true)
+            var module_id = $m
+            var student_id = $student_id
+            $.ajax({
+                type: 'GET',
+                url: "{{ route('institute.meeting.create') }}",
+                data: {  "module_id": module_id , "student_id": student_id},
+                success: function (data){
+                    setVisible('#loading',false)
+                    var data = JSON.parse(data)
+                    window.open(data, "_blank")
+                }
+            })
+        }
+        function setVisible(selector, visible) {
+            document.querySelector(selector).style.display = visible ? 'block' : 'none';
+        }
+    </script>
 @endsection
