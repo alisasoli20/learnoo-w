@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('teacher_id')->nullable();
             $table->string('country')->nullable();
             $table->string('phone')->nullable();
-            $table->smallInteger('security_question');
+            $table->bigInteger('security_question_id');
             $table->string('security_answer');
             $table->string("role");
             $table->string('id_photo')->nullable();

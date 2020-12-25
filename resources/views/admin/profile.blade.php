@@ -1,5 +1,16 @@
 @extends('layouts.app')
 @section('content')
+    @if(session()->has('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+    @if(session()->has('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
+    @if($errors->any())
+        <div class="alert alert-danger">
+            {!! implode('', $errors->all('<div>:message</div>')) !!}
+        </div>
+    @endif
     <div class="container-fluid mt-2">
         <div class="row">
             <div class="col-md-12 text-right">
@@ -180,15 +191,15 @@
                 <h4 style="font-weight: bold;font-family: sans-serif;"> Password Changing </h4>
             </div>
             <div class="col-md-12">
-                <form id="reset_password_form" class="p-0 m-0">
+                <form id="reset_password_form" class="p-0 m-0" method="POST" action="{{ route('reset.password') }}">
                     @csrf
                     <div class="form-group row">
                         <label for="" class="col-md-2 offset-md-2 col-form-label" style="font-family: sans-serif;font-weight: bold;">Search By* </label>
                         <div class="col-md-5">
                             <div class="form-group">
                                 <select class="form-control"  placeholder ="" id="search_by">
-                                    <option value="1">email</option>
-                                    <option value="2">id</option>
+                                    <option value="email">Email Address</option>
+                                    <option value="id">ID Number</option>
                                 </select>
                             </div>
                         </div>
@@ -205,32 +216,32 @@
                     <div class="form-group row">
                         <label for="" class="col-md-2 offset-md-2 col-form-label" style="font-family: sans-serif;font-weight: bold;">Result </label>
                         <div class="col-md-5">
-                            <input type="text" name="" class="form-control" readonly id="result" placeholder="" style="outline: none;box-shadow: none;border-radius: 0px">
+                            <input type="text" name="email" class="form-control" readonly id="result" placeholder="" style="outline: none;box-shadow: none;border-radius: 0px">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="" class="col-md-2 offset-md-2 col-form-label" style="font-family: sans-serif;font-weight: bold;"> </label>
-                        <div class="col-md-5">
-                            <input type="text" name="" class="form-control" readonly id="security_password" placeholder="">
+                        <div class="col-md-6">
+                            <input type="text" name="security_password" class="form-control" readonly id="security_password" placeholder="">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="" class="col-md-2 offset-md-2 col-form-label" style="font-family: sans-serif;font-weight: bold;">Security Answer* </label>
                         <div class="col-md-5">
-                            <input type="text" name="" class="form-control" id="institute_Security_answer" placeholder="Security Answer">
+                            <input type="text" name="security_answer" class="form-control" id="institute_Security_answer" placeholder="Security Answer" required>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="" class="col-md-2 offset-md-2 col-form-label" style="font-family: sans-serif;font-weight: bold;"> New Password* </label>
                         <div class="col-md-5">
-                            <input type="password" name="" class="form-control" id="institute_Password" placeholder="Password">
+                            <input type="password" name="password" class="form-control" id="institute_Password" placeholder="Password" required>
                         </div>
 
                     </div>
                     <div class="form-group row">
                         <label for="" class="col-md-2 offset-md-2 col-form-label" style="font-family: sans-serif;font-weight: bold;">Confirm New Password* </label>
                         <div class="col-md-5">
-                            <input type="password" name="" class="form-control" id="institute_Retype-Password" placeholder="Retype-Password">
+                            <input type="password" name="password_confirmation" class="form-control" id="institute_Retype-Password" placeholder="Retype-Password" required>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -248,15 +259,21 @@
 @section('page-scripts')
     <script>
         $("#search").click(function() {
-            var searchBy = $('#search_by').find(":selected").text()
+            var searchBy = $('#search_by').find(":selected").val()
             var searchParameter = $('#q').val()
             var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
             $.ajax({
                 type: 'POST',
-                url: "{{ route('admin.get.user.data') }}",
+                url: "{{ route('get.user.data') }}",
                 data: {"_token":CSRF_TOKEN, "searchBy": searchBy, "q": searchParameter},
                 success: function (data){
-                    alert("success")
+                    var data = JSON.parse(data)
+                    if(typeof data != "string") {
+                        $('#result').val(data.email)
+                        $('#security_password').val('Your Security Question is: ' + data.security_question.question)
+                    }else{
+                        alert(data)
+                    }
                 }
             })
         })

@@ -69,7 +69,7 @@ class DatabaseSeeder extends Seeder
              'name' => 'Admin',
              'email' => 'admin@admin.com',
              'password' => Hash::make('password'),
-             'security_question' => 10,
+             'security_question_id' => 10,
              'security_answer' => 'Shikarpur',
              'role' => 'admin',
              'created_at' => Carbon::now()

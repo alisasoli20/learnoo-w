@@ -43,4 +43,7 @@ class User extends Authenticatable
     public function applied_module(){
         return $this->hasMany(AppliedModule::class);
     }
+    public function security_question(){
+        return $this->belongsTo(SecurityQuestion::class);
+    }
 }

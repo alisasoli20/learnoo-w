@@ -4,13 +4,12 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/',[\App\Http\Controllers\WelcomeController::class,'index'])->name('welcome');
-Route::get('/send/mail',function (){
-    $meeting =[
-        'title' => 'Meeting invitation'
-    ];
-    \Illuminate\Support\Facades\Mail::to('alisasoli20@gmail.com')->send(new \App\Mail\MeetingMail($meeting));
-    echo "Mail has been sent";
-});
+
+Route::get('/forget/password',[\App\Http\Controllers\UserController::class,'forgetPassword'])->name('forget.password');
+
+Route::post('/reset/password',[\App\Http\Controllers\UserController::class,'resetPassword'])->name('reset.password');
+
+Route::post('/get/user/data',[\App\Http\Controllers\UserController::class,'getUserData'])->name('get.user.data');
 
 Route::get('/{page}',\App\Http\Controllers\WelcomeController::class)
         ->name('page')
@@ -46,7 +45,7 @@ Route::group(['prefix' => 'institute'], function(){
 
 // Admin Routes
 Route::post('admin/get/user/data',[\App\Http\Controllers\AdminController::class,'getUserData'])->name('admin.get.user.data');
-Route::group(['prefix'=> 'admin', 'middleware' => 'auth' ], function(){
+Route::group(['prefix'=> 'admin', 'middleware' => ['auth','admin'] ], function(){
     Route::get('/profile',[\App\Http\Controllers\AdminController::class,'profile'])->name('admin.profile');
     Route::post('/profile',[\App\Http\Controllers\AdminController::class,'updateSettings']);
 

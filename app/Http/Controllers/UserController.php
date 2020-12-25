@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -110,5 +111,38 @@ class UserController extends Controller
             'status' => 'pending',
         ]);
         return redirect()->back()->with('success','Successfully Applied for the module');
+    }
+    public function forgetPassword(){
+        $settings = Setting::all();
+        $settings = $settings->keyBy('key');
+        return view('forget_password',compact('settings'));
+    }
+    public function getUserData(Request $request){
+        $user = User::where($request->searchBy,$request->q)->first();
+        if($user){
+            $user['security_question'] = $user->security_question->question;
+            unset($user['security_answer']);
+            return json_encode($user);
+        }
+        else{
+            return json_encode("User not found");
+        }
+
+    }
+    public function resetPassword(Request $request){
+        $rules = [
+            'password' =>'required|confirmed',
+            'security_answer' => 'required'
+        ];
+        $this->validate($request,$rules);
+        $user = User::where('email',$request->email)->first();
+        if($user->security_answer == $request->security_answer){
+            $user->password = Hash::make($request->password);
+            $user->save();
+            return redirect(route('institute'))->with('success','Password has been changed successfully');
+        }
+        else{
+            return redirect()->back()->with("error","invalid input");
+        }
     }
 }

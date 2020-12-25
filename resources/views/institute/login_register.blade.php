@@ -36,7 +36,7 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-7 offset-md-5">
-                                    <a href="" style="color:#2765CF;"> <p class="d-flex justify-content-end"> Forget Password? </p> </a>
+                                    <a href="{{ route('forget.password') }}" style="color:#2765CF;"> <p class="d-flex justify-content-end"> Forget Password? </p> </a>
                                     <button type="submit"  class="btn btn-block" style="background-color: #FD0585;color:white;">Log In</button>
                                 </div>
                             </div>
@@ -119,7 +119,7 @@
                                 <label for="" class="col-md-4 col-form-label" style="font-family: sans-serif;font-weight: bold;">Security Question* </label>
                                 <div class="col-md-7">
                                     <div class="form-group">
-                                        <select class="form-control" name="security_question" id="institute_Security_qustion" placeholder = "Select a Security Question">
+                                        <select class="form-control" name="security_question_id" id="institute_Security_qustion" placeholder = "Select a Security Question">
                                             <option selected disabled>Select your security question</option>
                                             <option value="1">What was the house number and street name you lived in as a child?</option>
                                             <option value="2">What were the last four digits of your childhood telephone number?</option>

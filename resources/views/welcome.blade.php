@@ -89,7 +89,7 @@
                     <label for="" class="col-md-3 col-form-label" style="font-family: sans-serif;font-weight: bold;">Select a Security Question* </label>
                     <div class="col-md-8">
                         <div class="form-group">
-                            <select name="security_question" class="form-control" id="sel1" placeholder = "Select a Security Question" required>
+                            <select name="security_question_id" class="form-control" id="sel1" placeholder = "Select a Security Question" required>
                                 <option selected disabled>Select your security question</option>
                                 <option value="1">What was the house number and street name you lived in as a child?</option>
                                 <option value="2">What were the last four digits of your childhood telephone number?</option>
